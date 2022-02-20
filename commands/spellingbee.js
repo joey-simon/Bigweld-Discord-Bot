@@ -1,6 +1,8 @@
 module.exports = {
   name: "spellingbee",
   description: "Nytimes spelling bee answers",
+  hidden: false,
+
   execute(message, args) {
     const request = require("request");
     const cheerio = require("cheerio");
@@ -11,7 +13,10 @@ module.exports = {
         if (!error && response.statusCode == 200) {
           const $ = cheerio.load(html);
           // convert the html to a string
-          let answers = $("*").html().toString();
+          let answers = $(
+            `.pz-game-screen script[type="text/javascript"]`
+          ).html();
+
           // remove all of the unnecessary code before the answers
           answers = answers.slice(answers.indexOf('"answers":') + 12);
           // remove all of the unnecessary code after the answers

@@ -1,19 +1,20 @@
 module.exports = {
   name: "sudoku",
   description: "`easy/medium/hard` Solution for the nytimes Sudoku",
+  hidden: false,
+
   execute(message, args) {
     const request = require("request");
     const cheerio = require("cheerio");
     const validArgs = ["easy", "medium", "hard"];
 
-    // if the command has no arguments
+    // Send an error message if no arguments were provided
     if (!args.length) {
-      // send an error message
       return message.channel.send(
         `You didn't provide any arguments, ${message.author}`
       );
+      // Send an error message if no relevant arguments were provided
     } else if (!validArgs.includes(args[0])) {
-      console.log(args[0]);
       return message.channel.send(
         `You didn't provide a relevant argument, ${message.author}`
       );

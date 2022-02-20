@@ -1,6 +1,8 @@
 module.exports = {
   name: "letterboxed",
   description: "Solution for the nytimes Letter Boxed game",
+  hidden: false,
+
   execute(message, args) {
     const request = require("request");
     const cheerio = require("cheerio");
