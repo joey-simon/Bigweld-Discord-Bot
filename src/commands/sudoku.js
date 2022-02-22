@@ -1,7 +1,7 @@
 module.exports = {
   name: "sudoku",
   description: "`easy/medium/hard` Solution for the nytimes Sudoku",
-  hidden: false,
+  enabled: true,
 
   execute(message, args) {
     const request = require("request");

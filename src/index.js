@@ -9,7 +9,7 @@ const client = new Discord.Client({
 const prefix = "-";
 client.commands = new Discord.Collection();
 const commandFiles = fs
-  .readdirSync("./commands/")
+  .readdirSync("./src/commands/")
   .filter((file) => file.endsWith(".js"));
 
 for (const file of commandFiles) {
@@ -26,8 +26,9 @@ client.on("messageCreate", (message) => {
   const args = message.content.slice(prefix.length).split(/ +/);
   const command = args.shift().toLowerCase();
 
-  // ensures that the command is valid
-  if (!client.commands.has(command)) return;
+  // exit this method if the command is not valid or is disabled
+  if (!client.commands.has(command) || !client.commands.get(command).enabled)
+    return;
 
   try {
     // trys to run the command
@@ -39,4 +40,4 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.login("OTI3ODEyNzA2MTY0MTcwODAz.YdPq6w.hgpfZRuG1sVzevF3wEDzBTBWPZU");
+client.login(require("../process.json").env.token);

@@ -1,7 +1,7 @@
 module.exports = {
   name: "spellingbee",
   description: "Nytimes spelling bee answers",
-  hidden: false,
+  enabled: true,
 
   execute(message, args) {
     const request = require("request");
