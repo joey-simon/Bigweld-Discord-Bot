@@ -19,7 +19,7 @@ Since this bot uses the Oxford Dictionaries API, you will have to sign up for it
 
 Go to this link https://developer.oxforddictionaries.com/?tag=#plans and sign up for the **Prototype** plan.
 
-Once you have signed up, click the **Credentials** button on the home screen, then click on your application. Keep this tab open as the **Application ID** and **Application Key** is required for confuguring the bot in step 5. 
+Once you have signed up, click the **Credentials** button on the home screen, then click on your application. Keep this tab open as the **Application ID** and **Application Key** are required for confuguring the bot in step 5. 
 
 ## 4. Installing Dependencies
 Run `npm install` from a terminal inside the root directory of this project. This will install all of the required dependencies located in "package.json" into a folder called "node_modules".
