@@ -23,7 +23,7 @@ Once you have signed up, click the **Credentials** button on the home screen, th
 
 ## 4. Installing Dependencies
 Run `npm install` from a terminal inside the root directory of this project. This will install all of the required dependencies located in "package.json" into a folder called "node_modules".
-## 5. Configuring the bot
+## 5. Configuring the Bot
 Create a file in the root directory of this project called ".env".
 
 Open ".env" and paste the following two lines:
@@ -34,7 +34,7 @@ OXFORD_API_CONFIG={ "app_id": "YOUR_APP_ID", "app_key": "YOUR_APP_KEY", "source_
 Be sure to replace these values with your own. Your **BOT_TOKEN** can be found on your Discord Developer Portal. Whereas your **app_id** and **app_key** can be found on the Oxford Dictionaries Developer page you still have open from the end of step 3.
 
 The **source_lang** can remain "en-gb", which is UK English. See the list of supported languages here https://developer.oxforddictionaries.com/documentation/languages
-## 6. Running the bot
+## 6. Running the Bot
 Run `node .` or `npm start` from a terminal inside the root directory of this project.
 
 The bot should now be up and running :) 
