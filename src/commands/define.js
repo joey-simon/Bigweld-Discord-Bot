@@ -4,10 +4,13 @@ module.exports = {
   enabled: false,
 
   execute(message, args) {
-    //
-    // TODO: Exit the method if there is no argument
-    //       and send error to console and discord
-    //
+    // If no arguments were provided
+    if (!args.length) {
+      // Alert the author and exit this method
+      return message.channel.send(
+        `You didn't provide a word for me to define, ${message.author}`
+      );
+    }
 
     const Dictionary = require("oxford-dictionary");
 
@@ -19,11 +22,15 @@ module.exports = {
 
     lookup.then(
       function (response) {
-        //
-        // TODO: Send the definition to discord.
-        //       Analyse the JSON response to check
-        //       where the definition is
-        //
+        // set the lexical category to the first one in the JSON response
+        const lexicalCategory =
+          response.results[0].lexicalEntries[0].lexicalCategory.text;
+        // set the definition to the first one in the JSON response
+        const definition =
+          response.results[0].lexicalEntries[0].entries[0].senses[0]
+            .definitions[0];
+        // send the lexical category as well as the definition
+        message.channel.send(`${lexicalCategory}\n${definition}`);
       },
       function (error) {
         console.log(error);

@@ -12,8 +12,10 @@ module.exports = {
       (error, response, html) => {
         if (!error && response.statusCode == 200) {
           const $ = cheerio.load(html);
-          // convert the html to a string
-          let answers = $("*").html().toString();
+          // get the html element holding the answers
+          let answers = $(
+            `.pz-game-screen script[type="text/javascript"]`
+          ).html();
           // remove all of the unnecessary code before the answers
           answers = answers.slice(answers.indexOf('"ourSolution":') + 16);
           // remove all of the unnecessary code after the answers
