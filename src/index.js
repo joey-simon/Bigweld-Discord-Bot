@@ -1,3 +1,4 @@
+require("dotenv").config();
 const Discord = require("discord.js");
 const fs = require("fs");
 
@@ -12,6 +13,7 @@ const commandFiles = fs
   .readdirSync("./src/commands/")
   .filter((file) => file.endsWith(".js"));
 
+// loop through each of the command files
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
   client.commands.set(command.name, command);
@@ -22,7 +24,9 @@ client.once("ready", () => {
 });
 
 client.on("messageCreate", (message) => {
+  // exit this method if the message does not start with the preifx or the author is a bot
   if (!message.content.startsWith(prefix) || message.author.bot) return;
+
   const args = message.content.slice(prefix.length).split(/ +/);
   const command = args.shift().toLowerCase();
 
@@ -40,4 +44,4 @@ client.on("messageCreate", (message) => {
   }
 });
 
-client.login(require("../process.json").env.token);
+client.login(process.env.BOT_TOKEN);

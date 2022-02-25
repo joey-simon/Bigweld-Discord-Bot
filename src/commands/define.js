@@ -11,10 +11,8 @@ module.exports = {
 
     const Dictionary = require("oxford-dictionary");
 
-    // Create a new Dictionary object
-    const dict = new Dictionary(
-      require("../../process.json").env["oxford-api-config"]
-    );
+    // Create a new Dictionary object with the necessary config
+    const dict = new Dictionary(JSON.parse(process.env.OXFORD_API_CONFIG));
 
     // lookup the definition of the first argument
     const lookup = dict.definitions(args[0]);
