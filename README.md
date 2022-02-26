@@ -2,7 +2,7 @@
 ## 1. Installing Node.js
 Download and install Node.js onto your machine from https://nodejs.org/en/download/
 ## 2. Creating a Discord Bot
-Head over to the Discord Developer Portal (https://discord.com/developers/applications). Click **New Application**, give it a name, then click **Create**.
+Head over to the Discord Developer Portal (https://discord.com/developers). Click **New Application**, give it a name, then click **Create**.
 
 In the left hand settings panel, click **Bot**, then **Add Bot**. 
 
