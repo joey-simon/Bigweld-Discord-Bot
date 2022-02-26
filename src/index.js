@@ -27,8 +27,8 @@ client.on("messageCreate", (message) => {
   // exit this method if the message does not start with the preifx or the author is a bot
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 
-  const args = message.content.slice(prefix.length).split(/ +/);
-  const command = args.shift().toLowerCase();
+  const args = message.content.slice(prefix.length).toLowerCase().split(/ +/);
+  const command = args.shift();
 
   // exit this method if the command is not valid or is disabled
   if (!client.commands.has(command) || !client.commands.get(command).enabled)
