@@ -22,6 +22,17 @@ module.exports = {
 
     lookup.then(
       function (response) {
+        // Just because there was a response does not mean that there is a defintion
+        // E.g. The word 'Riley' has a response but there is no defintion
+        // This causes the Bot to crash when it is trying access a defintion that does not exist
+        // so it is important to check that a definiton for the word exists before proceeding
+        if (response.results[0].lexicalEntries[0].entries === undefined) {
+          console.log(`There is no definition for the word ${args[0]}`);
+          return message.channel.send(
+            `There is no definiton for the word '${args[0]}', ${message.author}`
+          );
+        }
+
         // set the lexical category to the first one in the JSON response
         const lexicalCategory =
           response.results[0].lexicalEntries[0].lexicalCategory.text;
