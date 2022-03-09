@@ -1,60 +1,68 @@
+const path = require("path");
+
 module.exports = {
   name: "roulette",
   description: `Play russian roulette by yourself, or @ someone you want to challenge`,
   enabled: false,
 
   execute(message, args) {
-    const {
-      MessageActionRow,
-      MessageButton,
-      MessageEmbed,
-    } = require("discord.js");
+    // check if the author has mentioned someone they want to challenge
+    if (message.mentions.members.first()) {
+      const otherPlayer = message.mentions.members.first().user;
 
-    // determine if the roulette game will be single or two player
-    if (!args.length) {
-      singlePlayer(message);
+      // check if the mention was a bot
+      if (otherPlayer.bot) {
+        return message.channel.send(
+          `You cannot challenge a bot, ${message.author}`
+        );
+        // check if the author mentioned themself
+      } else if (otherPlayer.id == message.author.id) {
+        return message.channel.send(
+          `You cannot challenge yourself, ${message.author}`
+        );
+      }
+      // the roulette gamemode must be twoPlayer since the mention was valid
+      twoPlayer(message, otherPlayer);
     } else {
-      twoPlayer(message);
+      // the roulette gamemode must be singleplayer since nobody was mentioned
+      singlePlayer(message);
     }
   },
 };
 
-function singlePlayer(message) {
-  message.channel.send("Single player roulette is coming soon...");
-}
+singlePlayer = (message) => {
+  message.channel.sendTyping();
+  message.channel.send({
+    files: [
+      {
+        attachment: path.join(__dirname, "rick-roll.gif"),
+        name: "rick-roll.gif",
+        description: "Get rick rolled lol",
+      },
+    ],
+  });
+};
 
-function twoPlayer(message) {
-  //
-  // TODO: Exit this method and alert the player if the
-  //       first argument is NOT a member in the server
-  //       OR the first argument is themself
-  //
+twoPlayer = (message, otherPlayer) => {
+  // const {
+  //   MessageActionRow,
+  //   MessageButton,
+  //   MessageEmbed,
+  // } = require("discord.js");
 
-  let otherPlayer; // will store the ID of the challenged user
-
-  // if the author did mention someone they wanted to challenge
-  if (message.mentions.members.first()) {
-    // store the id of the challenged member
-    otherPlayer = message.mentions.members.first().user.id;
-    message.channel.send("Two player roulette is coming soon...");
-  } else {
-    console.log("there was no mention");
-  }
+  message.channel.send("Two player roulette is coming soon...");
 
   // const embed = new MessageEmbed()
-  //   .setTitle("Do you accept this challenge?")
+  //   .setTitle(`Do you accept this challenge, ${otherPlayer.username}?`)
   //   .setColor("BLURPLE");
-
   // const acceptButton = new MessageButton()
   //   .setCustomId("accept")
   //   .setLabel("Accept")
   //   .setStyle("SUCCESS");
-
   // const declineButton = new MessageButton()
   //   .setCustomId("decline")
   //   .setLabel("Decline")
   //   .setStyle("DANGER");
-
   // const row = new MessageActionRow().addComponents([
   //   acceptButton,
   //   declineButton,
@@ -63,5 +71,8 @@ function twoPlayer(message) {
   //
   // TODO: Send this message only to the person who the author wants to duel
   //
-  // message.channel.send({ embeds: [embed], components: [row] });
-}
+  // message.channel.send({
+  //   embeds: [embed],
+  //   components: [row],
+  // });
+};

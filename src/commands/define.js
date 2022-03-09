@@ -12,6 +12,8 @@ module.exports = {
       );
     }
 
+    message.channel.sendTyping();
+
     const Dictionary = require("oxford-dictionary");
 
     // Create a new Dictionary object with the necessary config

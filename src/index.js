@@ -23,7 +23,7 @@ client.once("ready", () => {
   console.log("Bigweld is online");
 });
 
-client.on("messageCreate", async (message) => {
+client.on("messageCreate", (message) => {
   // exit this method if the message does not start with the preifx or the author is a bot
   if (!message.content.startsWith(prefix) || message.author.bot) return;
 

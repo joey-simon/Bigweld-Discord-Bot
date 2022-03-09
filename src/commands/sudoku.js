@@ -22,6 +22,8 @@ module.exports = {
     const request = require("request");
     const cheerio = require("cheerio");
 
+    message.channel.sendTyping();
+
     request(
       "https://www.nytimes.com/puzzles/sudoku/easy",
       (error, response, html) => {
