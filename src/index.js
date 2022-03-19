@@ -16,6 +16,8 @@ const commandFiles = fs
 // loop through each of the command files
 for (const file of commandFiles) {
   const command = require(`./commands/${file}`);
+  // skip the command if it is disabled
+  if (!command.enabled) continue;
   client.commands.set(command.name, command);
 }
 
@@ -23,6 +25,7 @@ client.once("ready", () => {
   console.log("Bigweld is online");
 });
 
+// Even listener for messages
 client.on("messageCreate", (message) => {
   // exit this method if the message does not start with the preifx or the author is a bot
   if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -31,8 +34,7 @@ client.on("messageCreate", (message) => {
   const command = args.shift();
 
   // exit this method if the command is not valid or is disabled
-  if (!client.commands.has(command) || !client.commands.get(command).enabled)
-    return;
+  if (!client.commands.has(command)) return;
 
   try {
     // trys to run the command
@@ -41,6 +43,22 @@ client.on("messageCreate", (message) => {
     // if there is an issue running the command, print error message
     console.error(error);
     message.reply("there was an error trying to execute that command!");
+  }
+});
+
+// Event listener for interactions
+client.on("interactionCreate", (interaction) => {
+  if (!interaction.isButton()) return;
+
+  // handle the button click
+  switch (interaction.customId) {
+    case "acceptRoulette":
+    case "declineRoulette":
+      client.commands.get("roulette").interact(interaction);
+      break;
+
+    default:
+      console.error("What kinda button are you pressing bro?");
   }
 });
 
