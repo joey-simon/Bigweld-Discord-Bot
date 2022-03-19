@@ -137,18 +137,8 @@ const createNewRouletteSession = (sessionId, message, mentionedUser) => {
 };
 
 const validInteraction = (interaction) => {
-  let sessionExists = false;
-
-  // loop through all of the current sessions
-  rouletteSessions.forEach((session) => {
-    // check if the sessionId of the message matches a session
-    if (interaction.message.sessionId === session.sessionId) {
-      sessionExists = true;
-    }
-  });
-
   // Return false if the session does not exist
-  if (!sessionExists) {
+  if (getSessionIndex(interaction.message.sessionId) === -1) {
     console.log(`The session for that interaction does NOT exist!`);
     return false;
   }
@@ -166,6 +156,8 @@ const validInteraction = (interaction) => {
 };
 
 const getSessionIndex = (sessionId) => {
+  // returns the index of a session when it is given the sessionId
+  // if the session cannot be found, -1 is returned
   return rouletteSessions.findIndex(
     (rouletteSessions) => rouletteSessions.sessionId === sessionId
   );
