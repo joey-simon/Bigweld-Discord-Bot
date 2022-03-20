@@ -1,10 +1,12 @@
+const { MessageActionRow, MessageButton, MessageEmbed } = require("discord.js");
+
 // Array that will store all of the roulette sessions
 let rouletteSessions = [];
 
 module.exports = {
   name: "roulette",
   description: `Play russian roulette by yourself, or @ someone you want to challenge`,
-  enabled: false,
+  enabled: true,
 
   interact(interaction) {
     // do not proceed if the interaction is invalid
@@ -16,6 +18,9 @@ module.exports = {
         break;
       case "declineRoulette":
         declineRoulette(interaction);
+        break;
+      case "shoot":
+        shootButtonClicked(interaction);
         break;
       default:
         console.error("The customId of this button is unfamiliar!");
@@ -48,18 +53,16 @@ module.exports = {
 };
 
 const singlePlayer = (message) => {
-  message.channel.send("One player roulette");
+  // if the chamber is spun and there are no blanks before the bullet
+  if (spinChamber() === 0) {
+    return message.channel.send(`${message.author.username} died!`);
+  }
+
+  message.channel.send(`${message.author.username} lived!`);
 };
 
 const twoPlayer = (message, mentionedUser) => {
-  const {
-    MessageActionRow,
-    MessageButton,
-    MessageEmbed,
-  } = require("discord.js");
-
   // send an accept/decline message with two buttons
-
   const embed = new MessageEmbed()
     .setTitle(`Do you accept this challenge, ${mentionedUser.username}?`)
     .setColor("BLURPLE");
@@ -99,13 +102,14 @@ const acceptRoulette = (interaction) => {
 
   const sessionIndex = getSessionIndex(interaction.message.sessionId);
 
-  if (sessionIndex != -1) {
-    // Set the accepted property for the session to TRUE
-    rouletteSessions[sessionIndex].accepted = true;
-  }
+  // exit this message if the session no longer exists
+  if (sessionIndex === -1) return;
 
-  // delete the accept/decline message
-  interaction.message.delete();
+  // Delete the accept/decline buttons
+  interaction.update({ components: [] });
+
+  // Send a shoot message with a SHOOT button
+  sendShootButton(interaction);
 };
 
 const declineRoulette = (interaction) => {
@@ -122,15 +126,16 @@ const declineRoulette = (interaction) => {
     rouletteSessions.splice(sessionIndex, 1);
   }
 
-  // Delete the accept/decline message
-  interaction.message.delete();
+  // Delete the accept/decline buttons
+  interaction.update({ components: [] });
 };
 
 const createNewRouletteSession = (sessionId, message, mentionedUser) => {
   // add a new roulette session to the array
   rouletteSessions.push({
     sessionId: sessionId,
-    accepted: false,
+    shots: 0,
+    blanks: spinChamber(),
     challenger: message.author,
     contender: mentionedUser,
   });
@@ -153,6 +158,75 @@ const validInteraction = (interaction) => {
 
   // the interaction must be valid if it passed the above checks
   return true;
+};
+
+const sendShootButton = (interaction) => {
+  const shootButton = new MessageButton()
+    .setCustomId("shoot")
+    .setLabel("SHOOT")
+    .setStyle("PRIMARY");
+
+  const row = new MessageActionRow().addComponents([shootButton]);
+
+  const sessionIndex = getSessionIndex(interaction.message.sessionId);
+
+  // Exit this method if the session does not exist
+  if (sessionIndex === -1) return;
+
+  let intendedUser = undefined;
+
+  // the challenger will always shoot when the number of shots fired is even
+  if (rouletteSessions[sessionIndex].shots % 2 === 0) {
+    intendedUser = rouletteSessions[sessionIndex].challenger;
+  } else {
+    intendedUser = rouletteSessions[sessionIndex].contender;
+  }
+
+  interaction.channel
+    .send({
+      content: `**➥ Your turn** ${intendedUser}`,
+      components: [row],
+    })
+    .then((sent) => {
+      // add a sessionId property to the accept/decline message
+      sent["sessionId"] = interaction.message.sessionId;
+      // add an indendedUser property to the accept/decline message
+      sent["intendedUser"] = intendedUser;
+    });
+};
+
+const shootButtonClicked = (interaction) => {
+  // Delete the shoot button
+  interaction.update({
+    components: [],
+  });
+
+  const sessionIndex = getSessionIndex(interaction.message.sessionId);
+
+  // Exit this method if the session does not exist
+  if (sessionIndex === -1) return;
+
+  // increment the number of shots by 1
+  rouletteSessions[sessionIndex].shots++;
+
+  // check if there are no more blanks before the bullet
+  if (rouletteSessions[sessionIndex].blanks === 0) {
+    // send message saying who died
+    interaction.channel.send(`${interaction.user.username} died!`);
+    // remove the session from the array
+    rouletteSessions.splice(sessionIndex, 1);
+  } else {
+    // decrement the number of blanks until the bullet
+    rouletteSessions[sessionIndex].blanks--;
+    // send another shoot button
+    sendShootButton(interaction);
+  }
+};
+
+const spinChamber = () => {
+  // Returns a random number of blanks before the bullet
+  // Specifically, a random number between 0 and 5 (both inclusive)
+  return Math.floor(Math.random() * (5 - 0 + 1));
 };
 
 const getSessionIndex = (sessionId) => {

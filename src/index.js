@@ -54,6 +54,7 @@ client.on("interactionCreate", (interaction) => {
   switch (interaction.customId) {
     case "acceptRoulette":
     case "declineRoulette":
+    case "shoot":
       client.commands.get("roulette").interact(interaction);
       break;
 
