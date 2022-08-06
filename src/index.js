@@ -64,3 +64,5 @@ client.on("interactionCreate", (interaction) => {
 });
 
 client.login(process.env.BOT_TOKEN);
+
+// TEST COMMENT
