@@ -5,7 +5,7 @@ let rouletteSessions = [];
 
 module.exports = {
   name: "roulette",
-  description: `Play russian roulette by yourself, or @ someone you want to challenge`,
+  description: `Play by yourself, or @ someone you want to challenge`,
   enabled: true,
 
   interact(interaction) {
